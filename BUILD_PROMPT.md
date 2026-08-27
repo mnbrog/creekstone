@@ -1,6 +1,6 @@
 # Build Prompt — Creekstone Retrievers Website Rebuild
 
-**Status:** v1 (draft for review)
+**Status:** v2 — spec locked, site built against it, photography outstanding
 **Source site:** https://www.creekstoneretrievers.com/
 
 ---
@@ -181,36 +181,71 @@ Every photograph on the current site is to be carried over. For each image:
 
 ---
 
-## 8. Open items — must be resolved before the build is "perfect"
+## 8. Build decisions taken
 
-1. **All photography.** Not yet retrieved (see blocker below).
-2. **Exact theme values** — the real palette, fonts, and layout of the current
-   site, so "same theme" is matched rather than guessed.
-3. **Verbatim page copy** for Home, Available Litters, Upcoming Litters, Contact,
-   and Directions — currently reconstructed in substance, not word-for-word.
-4. **Current litter data** — live listings, dam/sire names, dates, photos.
-5. **Any dog profile pages or testimonials** not visible in the sitemap above.
-6. **Email address** — not yet recovered; only phone numbers are confirmed.
+These were open in v1 and are now settled in the code:
+
+- **Flat `.html` filenames at the repository root**, not directory-style URLs.
+  This keeps the site hostable on the simplest possible hosting with no rewrite
+  rules, and it lets the two legacy filenames survive as real files.
+- **Legacy URLs preserved** — `home.html` and `lost---found.html` ship as
+  redirect stubs (canonical link + meta refresh + JS fallback) pointing at
+  `index.html` and `directions.html`. Nothing that links to the old site breaks.
+- **Shared header/footer live in `tools/partials/`**, assembled by
+  `tools/build.sh`. The committed `.html` files are the deliverable; the script
+  exists only so the six pages cannot drift apart when shared markup changes.
+  Hosting still requires no build step.
+- **Placeholder images are named for the photographs they stand in for**, so
+  swapping in the real files is a rename-and-rebuild rather than a re-layout.
+- **No email address is published.** None could be confirmed, and a guessed
+  address on a breeder's contact page silently loses puppy enquiries. The
+  contact page is phone-first using the two confirmed numbers; the form is
+  deferred until an address and a host-side form handler exist.
+- **Litter details render as "To be confirmed"** rather than invented names and
+  dates. The page structure is finished; only the data is pending.
+
+## 9. Open items — what still stands between this and "perfect"
+
+1. **All photography.** Every image is a placeholder (see blocker below).
+2. **Exact theme values** — the real palette, fonts and layout of the current
+   site, so "same theme" is matched rather than interpreted. The current theme
+   is a considered guess at a golden-retriever farm palette, not a match.
+3. **Verbatim page copy** for Home, Available Litters, Upcoming Litters, Contact
+   and Directions — currently accurate in substance, not word-for-word.
+4. **Current litter data** — dam and sire names, birth dates, availability, price
+   per litter, and each litter's photos.
+5. **Any dog profile or testimonial pages** not visible in the sitemap in §2.
+6. **Email address**, if the business publishes one.
+7. **Turn-by-turn directions** — the steps on `directions.html` are derived from
+   the address, not from the original page's own landmark directions.
 
 ### Blocker
+
 This environment's network egress policy blocks **all** outbound web fetching —
-both `curl` and the fetch tool, for every domain, not just this one. The content
-above was reconstructed through web search, which is the only channel available.
-The photographs and exact styling cannot be retrieved without one of:
-- allowlisting `creekstoneretrievers.com` in the environment's egress policy,
-- the images and a screenshot of each page supplied directly, or
-- the saved page HTML pasted or committed into the repo.
+`curl` and the fetch tool alike, for every domain, not only this one. Everything
+in §3 was reconstructed through web search, the one channel that works.
 
----
+To close items 1–7, one of the following is needed:
+- allowlist `creekstoneretrievers.com` in the environment's network policy (this
+  is set per-environment at claude.ai/code and generally takes effect in a new
+  session), or
+- supply the images plus a screenshot of each page directly, or
+- commit the saved page HTML into the repository.
 
-## 9. Acceptance criteria
+## 10. Acceptance criteria
 
-- [ ] All six pages built and cross-linked; legacy `.html` URLs still resolve.
-- [ ] Every photo from the original site is present, optimized, with real alt text.
-- [ ] Business facts render exactly as listed in §3 — names, phones, address,
+Done:
+- [x] All six pages built and cross-linked; legacy `.html` URLs still resolve.
+- [x] Business facts render exactly as listed in §3 — names, phones, address,
       prices, and the warranty terms including exclusions.
+- [x] Clean and responsive at 375px, 768px and 1440px with no horizontal scroll.
+- [x] Semantic landmarks, skip link, visible focus states, alt text on every
+      image, `aria-current` on the active nav item, 44px tap targets.
+- [x] Every phone number is a working `tel:` link.
+- [x] `LocalBusiness` JSON-LD on the contact page with the real NAP details.
+- [x] No console errors, no broken images, no dead links.
+
+Outstanding:
+- [ ] Every photo from the original site present, optimized, with real alt text.
 - [ ] Recognizably the same theme as the original, verified against a screenshot.
-- [ ] Clean and responsive at 375px, 768px, and 1440px with no horizontal scroll.
-- [ ] Passes an accessibility pass: AA contrast, focus states, alt text, landmarks.
-- [ ] Every phone number is a working `tel:` link.
-- [ ] No console errors, no broken images, no dead links.
+- [ ] Real litter data on both litter pages.
