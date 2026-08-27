@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900" role="img" aria-label="Puppies raised indoors">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F5EADA"/>
+      <stop offset="1" stop-color="#E8CFA6"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#g)"/>
+  <circle cx="600" cy="375" r="90" fill="#C4862B" opacity=".45"/>
+  <text x="50%" y="562" text-anchor="middle"
+        font-family="Georgia, serif" font-size="50" fill="#6B5A45">Puppies raised indoors</text>
+  <text x="50%" y="631" text-anchor="middle"
+        font-family="Helvetica, Arial, sans-serif" font-size="30" fill="#9A8B72" opacity=".75">photo to be replaced</text>
+</svg>
